@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/distributed-auction-application.iml" filepath="$PROJECT_DIR$/.idea/modules/distributed-auction-application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/distributed-auction-application_main.iml" filepath="$PROJECT_DIR$/.idea/modules/distributed-auction-application_main.iml" group="distributed-auction-application" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/distributed-auction-application_test.iml" filepath="$PROJECT_DIR$/.idea/modules/distributed-auction-application_test.iml" group="distributed-auction-application" />
+    </modules>
+  </component>
+</project>
