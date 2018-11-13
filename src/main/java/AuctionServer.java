@@ -1,3 +1,4 @@
+import com.sun.corba.se.spi.activation.Server;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.IOException;
@@ -12,8 +13,12 @@ public class AuctionServer {
     private ServerSocket serverSocket;
     private final int PORT = 4110;
     private final String welcomeMessage = "Welcome to the Auction";
-    private String clientRequest = "";
+    private String enteredInput;
     private ArrayList<Product> products;
+    private Scanner userInput;
+    private ServerCommandHandler serverCommandHandler;
+
+    public static int numberOfConnections = 0;
 
     public AuctionServer() {
 
@@ -25,6 +30,15 @@ public class AuctionServer {
 
         products.add(product1);
         products.add(product2);
+
+        // Create a scanner for userInput for the menu
+        this.userInput = new Scanner(System.in);
+
+        // String to hold the choice on the server
+        this.enteredInput = "";
+
+        // Instantiate a server command handler
+        serverCommandHandler = new ServerCommandHandler();
 
         System.out.println("Auction Server Starting...");
 
@@ -40,25 +54,18 @@ public class AuctionServer {
     }
 
     private void startServer() {
-        Socket link = null;
+        // Lets execute the Client Listener thread so it can start listening for client connections
+        ClientListener clientListener = new ClientListener(this.serverSocket, this.products);
 
-        // Infinitely check for connections
+        clientListener.start();
+
+        // Now that is done we can display the menu to the server admin.
         do {
-            // Try accept the connection
-            try {
-                Socket client = serverSocket.accept();
+            serverCommandHandler.executeCommand(this.enteredInput);
 
-                System.out.println("New client connection established...");
+            this.enteredInput = userInput.nextLine();
 
-                // Create a client handler instance thread
-                ClientHandler handler = new ClientHandler(client, products);
+        } while(!this.enteredInput.equals("leave") || !this.enteredInput.equals("leave -s"));
 
-                handler.start();
-
-            } catch (IOException exception) {
-                System.out.println(exception);
-                exception.printStackTrace();
-            }
-        } while(true);
     }
 }

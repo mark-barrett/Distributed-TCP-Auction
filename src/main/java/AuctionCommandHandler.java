@@ -1,12 +1,12 @@
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class CommandHandler {
+public class AuctionCommandHandler {
 
     // A string to hold the contents of what is being displayed back to the user
     private String display = "";
 
-    public CommandHandler() {
+    public AuctionCommandHandler() {
     }
 
     public void executeCommand(String command, PrintWriter output, ArrayList<Product> products) {

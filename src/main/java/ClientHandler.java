@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class ClientHandler extends Thread {
     private Scanner input;
     private PrintWriter output;
-    private CommandHandler commandHandler;
+    private AuctionCommandHandler commandHandler;
     private String welcomeMessage;
     private String clientRequest;
     private ArrayList<Product> products;
@@ -23,7 +23,7 @@ public class ClientHandler extends Thread {
             this.output = new PrintWriter(socket.getOutputStream(), true);
 
             // Instantiate a command handler instance
-            this.commandHandler = new CommandHandler();
+            this.commandHandler = new AuctionCommandHandler();
 
             // Set the welcome message and client request
             this.welcomeMessage = "Welcome to the Auction";
