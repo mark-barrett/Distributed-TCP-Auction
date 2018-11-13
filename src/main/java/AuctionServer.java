@@ -1,10 +1,7 @@
 import com.sun.corba.se.spi.activation.Server;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -27,11 +24,20 @@ public class AuctionServer {
         // Lets start with some test mock products
         products = new ArrayList<Product>();
 
-        Product product1 = new Product("Mac Book Pro", 1599);
-        Product product2 = new Product("Galaxy S9 Plus", 999);
+        // Get the products from the local file.
+        try {
+            ObjectInputStream inStream = new ObjectInputStream(new FileInputStream("products.dat"));
 
-        products.add(product1);
-        products.add(product2);
+            // Try assign them to the ArrayList
+            while(inStream.readObject() != null) {
+                products.add((Product) inStream.readObject());
+            }
+
+
+        } catch(Exception exception) {
+            System.out.println(exception);
+            exception.printStackTrace();
+        }
 
         // Create a scanner for userInput for the menu
         this.userInput = new Scanner(System.in);
