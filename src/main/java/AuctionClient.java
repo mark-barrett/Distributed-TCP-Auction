@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class AuctionClient {
     private InetAddress host;
-    private final int PORT = 1234;
+    private final int PORT = 4110;
     private String serverResponse;
     private String clientRequest;
 
@@ -35,18 +35,28 @@ public class AuctionClient {
 
             // Loop infinitely until the user types in: leave auction
             do {
-                // While there are new lines coming in from the server
-                while(serverInput.hasNextLine()) {
-                    System.out.println(serverInput.nextLine());
-                }
+
+                do {
+                    // Get the response
+                    this.serverResponse = serverInput.nextLine();
+
+                    // Print it if it doesn't equal to the end of the block
+                    if(!this.serverResponse.equals("endblock")) {
+                        System.out.println(this.serverResponse);
+                    }
+
+                } while(!this.serverResponse.equals("endblock"));
+
                 // Get whatever the user is typing in
                 this.clientRequest = userInput.nextLine();
 
+                System.out.println(this.clientRequest);
+
                 // Output it to the server
-                clientOutput.print(this.clientRequest);
+                clientOutput.println(this.clientRequest);
 
-            } while(!userInput.equals("leave auction"));
 
+            } while(!this.clientRequest.equals("leave"));
 
 
         } catch (IOException e) {
