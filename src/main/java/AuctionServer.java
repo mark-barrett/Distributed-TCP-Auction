@@ -1,7 +1,9 @@
 import com.sun.corba.se.spi.activation.Server;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +16,7 @@ public class AuctionServer {
     private final int PORT = 4110;
     private final String welcomeMessage = "Welcome to the Auction";
     private String enteredInput;
-    private ArrayList<Product> products;
+    public static ArrayList<Product> products;
     private Scanner userInput;
     private ServerCommandHandler serverCommandHandler;
 
@@ -65,7 +67,37 @@ public class AuctionServer {
 
             this.enteredInput = userInput.nextLine();
 
-        } while(!this.enteredInput.equals("leave") || !this.enteredInput.equals("leave -s"));
+        } while(!this.enteredInput.equals("leave"));
+
+        // This is when a user wants to close the auction but save the state of the products into a file.
+        try {
+            ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream("products.dat"));
+
+            System.out.println("Saving products to local file");
+            for(int i=0; i<AuctionServer.products.size(); i++) {
+                outStream.writeObject(AuctionServer.products.get(i));
+            }
+
+            System.out.println("Products saved successfully");
+
+            outStream.close();
+
+        } catch(Exception exception) {
+            System.out.println(exception);
+            exception.printStackTrace();
+        }
+
+        try
+        {
+            System.out.println("Closing Server....");
+            serverSocket.close();
+            System.exit(1);
+        }
+        catch(IOException ioEx)
+        {
+            System.out.println("Unable to disconnect!");
+            System.exit(1);
+        }
 
     }
 }

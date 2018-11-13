@@ -1,4 +1,6 @@
-import java.io.PrintWriter;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -36,6 +38,11 @@ public class ServerCommandHandler {
 
             productPrice = userInput.nextLine();
 
+            // Add the product
+            Product product = new Product(productName, Float.parseFloat(productPrice));
+
+            AuctionServer.products.add(product);
+
             System.out.println("Added Product: "+productName+" for €"+productPrice);
 
 
@@ -54,8 +61,7 @@ public class ServerCommandHandler {
                     "Please pick an option:\n"+
                     "add      : Add a product to the auction\n"+
                     "list     : List connected clients\n"+
-                    "leave    : Close the server and the auction\n"+
-                    "leave -s : Leave the server and save products\n");
+                    "leave    : Close the server and the auction\n");
         }
     }
 }
