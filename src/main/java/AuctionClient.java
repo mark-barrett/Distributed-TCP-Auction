@@ -37,8 +37,11 @@ public class AuctionClient {
             do {
 
                 do {
-                    // Get the response
-                    this.serverResponse = serverInput.nextLine();
+
+                    if(serverInput.hasNext()) {
+                        // Get the response
+                        this.serverResponse = serverInput.nextLine();
+                    }
 
                     // Print it if it doesn't equal to the end of the block
                     if(!this.serverResponse.equals("endblock")) {
@@ -49,8 +52,6 @@ public class AuctionClient {
 
                 // Get whatever the user is typing in
                 this.clientRequest = userInput.nextLine();
-
-                System.out.println(this.clientRequest);
 
                 // Output it to the server
                 clientOutput.println(this.clientRequest);

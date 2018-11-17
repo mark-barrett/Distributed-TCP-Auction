@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class Product implements Serializable {
     private String name;
     private float price;
+    private boolean sold;
 
     public Product(String name, float price) {
         this.setName(name);
@@ -29,5 +30,13 @@ public class Product implements Serializable {
     public String toString() {
         return "Product Name: "+this.getName()+"\n"+
                 "Product Price: €"+this.getPrice()+"\n\n";
+    }
+
+    public boolean isSold() {
+        return sold;
+    }
+
+    public void setSold(boolean sold) {
+        this.sold = sold;
     }
 }

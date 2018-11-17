@@ -10,10 +10,19 @@ public class AuctionCommandHandler {
     }
 
     public void executeCommand(String command, PrintWriter output, ArrayList<Product> products) {
+
+        System.out.println("Here");
         // Check to see what type is is:
         if(command.equals("bid")) {
-            // Return the bid screen
-            System.out.println("Heres how you bid");
+            // Return the product currently for sale
+            this.display = "[===========[Current Item  For Sale]===========]\n" +
+                            "Product: "+Auction.currentProductForSale.getName()+"\n"+
+                            "Price: "+Auction.currentProductForSale.getPrice()+"\n"+
+                            " \n"+
+                            "To Enter a bid type: bid [amount]\n"+
+                            "Or return to the main menu: main\n"+
+                            "endblock";
+
         } else if(command.equals("list")) {
 
             Product product;
@@ -27,7 +36,8 @@ public class AuctionCommandHandler {
                 this.display += product.toString();
             }
 
-            this.display += "Return to the main menu by typing: main";
+            this.display += "Return to the main menu by typing: main\n"+
+                    "endblock";
 
         } else {
             // Return the menu

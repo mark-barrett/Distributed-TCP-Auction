@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AuctionServer {
 
@@ -17,6 +19,7 @@ public class AuctionServer {
     private Scanner userInput;
     private ServerCommandHandler serverCommandHandler;
 
+    public static Auction auction;
     public static int numberOfConnections = 0;
 
     public AuctionServer() {
@@ -66,6 +69,12 @@ public class AuctionServer {
         ClientListener clientListener = new ClientListener(this.serverSocket, this.products);
 
         clientListener.start();
+
+        // Start by creating the actual auction
+        auction = new Auction(this.products);
+
+        // Start it
+        auction.start();
 
         // Now that is done we can display the menu to the server admin.
         do {
