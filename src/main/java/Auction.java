@@ -29,6 +29,8 @@ public class Auction extends Thread {
 
     public static long auctionStartTime;
 
+    final long NANOSEC_PER_SEC = 1000l*1000*1000;
+
     public Auction(ArrayList<Product> products) {
         this.setProducts(products);
         this.setTimer(new Timer());
@@ -52,10 +54,17 @@ public class Auction extends Thread {
                 System.out.println("Price: "+currentProductForSale.getPrice());
                 System.out.println("Current Bid: "+currentBid);
                 System.out.println("Auction has started");
+
+                while ((System.nanoTime()-System.nanoTime())< 1*60*NANOSEC_PER_SEC){
+
+                }
+
+                System.out.println("Auction done!");
             }
         };
 
         Auction.getTimer().schedule(timerTask, 0, 60000);
+
     }
 
     public static void restartAuction() {
@@ -79,7 +88,7 @@ public class Auction extends Thread {
 
         Auction.getTimer().cancel();
         timer = new Timer();
-        timer.schedule(timerTask, 0, 60000);
+        timer.schedule(timerTask, 0, 1000);
     }
 
     public static void acceptBid(Product product, float amount) {
