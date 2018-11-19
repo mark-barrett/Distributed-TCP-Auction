@@ -71,11 +71,11 @@ public class AuctionServer {
         clientListener.start();
 
         // Start by creating the actual auction
-        auction = new Auction(this.products);
+        auction = new Auction(products);
 
         // Start it
         auction.start();
-
+        
         // Now that is done we can display the menu to the server admin.
         do {
             serverCommandHandler.executeCommand(this.enteredInput);

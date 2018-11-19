@@ -30,25 +30,16 @@ public class AuctionClient {
             // Setup an output stream to send data to the server
             PrintWriter clientOutput = new PrintWriter(link.getOutputStream(), true);
 
+            // Message Thread
+            MessageListener messageListener = new MessageListener(serverInput);
+
+            messageListener.start();
+
             // Setup a scanner for the users keyboard input
             Scanner userInput = new Scanner(System.in);
 
             // Loop infinitely until the user types in: leave auction
             do {
-
-                do {
-
-                    if(serverInput.hasNext()) {
-                        // Get the response
-                        this.serverResponse = serverInput.nextLine();
-                    }
-
-                    // Print it if it doesn't equal to the end of the block
-                    if(!this.serverResponse.equals("endblock")) {
-                        System.out.println(this.serverResponse);
-                    }
-
-                } while(!this.serverResponse.equals("endblock"));
 
                 // Get whatever the user is typing in
                 this.clientRequest = userInput.nextLine();

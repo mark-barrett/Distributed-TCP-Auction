@@ -18,6 +18,8 @@ public class ServerCommandHandler {
         if(command.equals("list")) {
             // List all connected clients
             System.out.println("Connected clients:");
+            System.out.println(ClientListener.getClients());
+
         } else if(command.equals("add")) {
 
             String productName;

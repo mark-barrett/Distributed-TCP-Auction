@@ -12,13 +12,18 @@ public class ClientListener extends Thread {
 
     private ServerSocket serverSocket;
     private ArrayList<Product> products;
+    private static ArrayList<ClientHandler> clients;
 
     public ClientListener(ServerSocket serverSocket, ArrayList<Product> products) {
         // Get the server socket from the Auction Server
         this.serverSocket = serverSocket;
         // Get the products
         this.products = products;
+        clients = new ArrayList<ClientHandler>();
+    }
 
+    public static ArrayList<ClientHandler> getClients() {
+        return clients;
     }
 
     // Overwrite the thread run method.
@@ -37,6 +42,8 @@ public class ClientListener extends Thread {
                 // Create a client handler instance thread
                 ClientHandler handler = new ClientHandler(client, products);
 
+                clients.add(handler);
+
                 handler.start();
 
             } catch (IOException exception) {
@@ -44,6 +51,5 @@ public class ClientListener extends Thread {
                 exception.printStackTrace();
             }
         } while(true);
-
     }
 }

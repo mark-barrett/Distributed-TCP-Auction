@@ -47,4 +47,10 @@ public class ClientHandler extends Thread {
 
         } while(!this.clientRequest.equals("leave"));
     }
+
+    public void notifyBid(Product product, float amount) {
+        output.println("\n[================[New Bid Made]================]");
+        output.println("A new bid of "+Float.toString(amount)+" on product "+product.getName()+" has been made.");
+        output.println("Auction timer has been reset to 1 minute.\n");
+    }
 }

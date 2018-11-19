@@ -5,6 +5,7 @@ public class Product implements Serializable {
     private String name;
     private float price;
     private boolean sold;
+    public long purchasedByThread;
 
     public Product(String name, float price) {
         this.setName(name);
