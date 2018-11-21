@@ -2,19 +2,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Scanner;
 
 public class AuctionClient {
     private InetAddress host;
-    private final int PORT = 4110;
+    private final int PORT;
     private String serverResponse;
     private String clientRequest;
+    private String name;
 
-    public AuctionClient(InetAddress host) {
+    public AuctionClient(InetAddress host, String port, String name) {
         this.host = host;
+        this.PORT = Integer.parseInt(port);
         this.serverResponse = " ";
         this.clientRequest = " ";
+        this.name = name;
     }
 
     public void connectToAuction() {
@@ -37,6 +39,9 @@ public class AuctionClient {
 
             // Setup a scanner for the users keyboard input
             Scanner userInput = new Scanner(System.in);
+
+            // Output the username to the client handler
+            clientOutput.println("USERNAME:"+this.name);
 
             // Loop infinitely until the user types in: leave auction
             do {

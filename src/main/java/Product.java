@@ -1,15 +1,15 @@
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Product implements Serializable {
     private String name;
     private float price;
     private boolean sold;
-    public long purchasedByThread;
+    public String purchasedByThread;
 
     public Product(String name, float price) {
         this.setName(name);
         this.setPrice(price);
+        this.purchasedByThread = "nobody";
     }
 
     public float getPrice() {

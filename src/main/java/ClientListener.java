@@ -30,7 +30,7 @@ public class ClientListener extends Thread {
         String clientsInString = "";
 
         for(int i=0; i<clients.size(); i++) {
-            clientsInString += "Client: "+clients.get(i).getId()+"\n";
+            clientsInString += "Client: "+clients.get(i).getClientName()+"\n";
         }
 
         return clientsInString;

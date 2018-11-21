@@ -11,6 +11,7 @@ public class ClientHandler extends Thread {
     private String welcomeMessage;
     private String clientRequest;
     private ArrayList<Product> products;
+    private String name;
 
     public ClientHandler(Socket socket, ArrayList<Product> products) {
 
@@ -34,7 +35,19 @@ public class ClientHandler extends Thread {
         }
     }
 
+    public String getClientName() {
+        return this.name;
+    }
+
     public void run() {
+
+        // The first thing to ever come through should be the username of the user
+        String tempUsername = input.nextLine();
+
+        // If the message contains the USERNAME flag then extract it by removing the USERNAME:
+        if(tempUsername.contains("USERNAME")) {
+            this.name = tempUsername.replace("USERNAME:", "");
+        }
 
         // First send a welcome message
         output.println(this.welcomeMessage);
@@ -63,7 +76,7 @@ public class ClientHandler extends Thread {
         output.println("[==============[Closing  Auction]==============]");
         output.println("Closing Auction. Product has been sold!");
         output.println("Product Sold: "+product.getName());
-        output.println("Sold To: Client "+product.purchasedByThread);
+        output.println("Sold To: "+product.purchasedByThread);
         output.println("Sold For: "+currentBid);
     }
 }

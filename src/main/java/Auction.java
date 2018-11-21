@@ -1,5 +1,3 @@
-import com.sun.deploy.util.SessionState;
-
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,7 +60,7 @@ public class Auction extends Thread {
                 System.out.println("Auction has started");
 
                 try {
-                    Auction.sleep(60000);
+                    Auction.sleep(10000);
                 } catch(Exception e) {
                     e.printStackTrace();
                     System.out.println(e);
@@ -70,7 +68,7 @@ public class Auction extends Thread {
 
                 // This timer task cannot exist if the user has bid on the item so if it has got to here with being
                 // cancelled then we know it hasn't been sold.
-                if(Auction.currentProductForSale.purchasedByThread == 0) {
+                if(Auction.currentProductForSale.purchasedByThread.equals("nobody")) {
                     System.out.println("[==============[Closing  Auction]==============]");
                     System.out.println("Closing Auction. No bids made on this product.");
                 }
@@ -96,7 +94,7 @@ public class Auction extends Thread {
                 System.out.println("Auction has started");
 
                 try {
-                    Auction.sleep(60000);
+                    Auction.sleep(10000);
                 } catch(Exception e) {
                     e.printStackTrace();
                     System.out.println(e);
@@ -107,7 +105,7 @@ public class Auction extends Thread {
                 // Check if the Auction.currentProductForSale.purchasedBy is not 0. if its not 0 then we
                 // know that someone has bid on it
                 // Send this to all client threads
-                if(Auction.currentProductForSale.purchasedByThread != 0) {
+                if(!Auction.currentProductForSale.purchasedByThread.equals("nobody")) {
 
                     // Set the value of the currentProductForSale to sold in the array list.
                     for(int i=0; i<products.size(); i++) {
@@ -116,23 +114,22 @@ public class Auction extends Thread {
                         }
                     }
 
-                    // Set the next product in the arraylist
-                    productloop:
-                    for(int i=0; i<products.size(); i++) {
-                        System.out.println("Finding a new product to sell");
-                        System.out.println("Size of array list:"+products.size());
-                        if(!products.get(i).isSold()) {
-                            currentProductForSale = products.get(i);
-                            System.out.println("Found one");
-                            System.out.println(currentProductForSale.toString());
-                            break productloop;
-                        }
-                    }
-
                     // Get all of the connected clients and then notify them of the bids
                     for(ClientHandler handler: ClientListener.getClients()) {
                         // The notify method
                         handler.productSold(Auction.currentProductForSale, Auction.currentBid);
+                    }
+
+                    // Set the next product in the arraylist
+                    productloop:
+                    for(int i=0; i<products.size(); i++) {
+                        if(!products.get(i).isSold()) {
+                            // Get the new product
+                            currentProductForSale = products.get(i);
+                            // Set the currentBid to 0
+                            currentBid = 0;
+                            break productloop;
+                        }
                     }
                 }
             }
@@ -143,12 +140,12 @@ public class Auction extends Thread {
         timer.schedule(timerTask, 0, 60000);
     }
 
-    public static void acceptBid(Product product, float amount, Long clientID) {
+    public static void acceptBid(Product product, float amount, String clientName) {
         // This would be something like. this.getTimer().cancel. Then start a new one.
         Auction.currentBid = amount;
 
         // Set the current product for sale as being bid on (bought by) the thread by clientID
-        Auction.currentProductForSale.purchasedByThread = clientID;
+        Auction.currentProductForSale.purchasedByThread = clientName;
 
         // Get all of the connected clients and then notify them of the bids
         for(ClientHandler handler: ClientListener.getClients()) {

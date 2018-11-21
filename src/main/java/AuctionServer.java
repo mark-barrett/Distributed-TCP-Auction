@@ -1,8 +1,3 @@
-import com.sun.corba.se.spi.activation.Server;
-import com.sun.xml.internal.rngom.parse.compact.*;
-import com.sun.xml.internal.rngom.parse.compact.EOFException;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +9,7 @@ import java.util.TimerTask;
 public class AuctionServer {
 
     private ServerSocket serverSocket;
-    private final int PORT = 4110;
+    private final int PORT;
     private final String welcomeMessage = "Welcome to the Auction";
     private String enteredInput;
     public static ArrayList<Product> products;
@@ -24,7 +19,9 @@ public class AuctionServer {
     public static Auction auction;
     public static int numberOfConnections = 0;
 
-    public AuctionServer() {
+    public AuctionServer(String port) {
+
+        this.PORT = Integer.parseInt(port);
 
         // Lets start with some test mock products
         products = new ArrayList<Product>();
