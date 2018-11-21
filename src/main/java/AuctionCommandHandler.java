@@ -9,13 +9,13 @@ public class AuctionCommandHandler {
     public AuctionCommandHandler() {
     }
 
-    public void executeCommand(String command, PrintWriter output, ArrayList<Product> products) {
+    public void executeCommand(String command, PrintWriter output, ArrayList<Product> products, ClientHandler client) {
 
         // Check to see what type is is:
         if(command.equals("bid")) {
 
-            System.out.println(System.currentTimeMillis());
-            System.out.println(Auction.auctionStartTime);
+            // Get the ID of the person who has currently bid on the item
+            long currentBidBy = Auction.currentProductForSale.purchasedByThread;
 
             long timeRemaining = 60 - ((System.currentTimeMillis() - Auction.auctionStartTime) / 1000);
             // Return the product currently for sale
@@ -23,6 +23,7 @@ public class AuctionCommandHandler {
                             "Product: "+Auction.currentProductForSale.getName()+"\n"+
                             "Price: "+Auction.currentProductForSale.getPrice()+"\n"+
                             "Current Bid: "+Auction.currentBid+"\n"+
+                            (currentBidBy != 0 ? "Current Bid By: Client "+Long.toString(currentBidBy)+"\n" : "" )+
                             "Time Remaining: "+Long.toString(timeRemaining)+" seconds\n"+
                             " \n"+
                             "To Enter a bid type: place bid: [amount]\n"+
@@ -56,7 +57,7 @@ public class AuctionCommandHandler {
                     "endblock";
 
                     // Accept the bid
-                    Auction.acceptBid(Auction.currentProductForSale, bid);
+                    Auction.acceptBid(Auction.currentProductForSale, bid, client.getId());
 
                 } else {
                     this.display = "That bid is lower then the product price.\n"+
@@ -69,7 +70,7 @@ public class AuctionCommandHandler {
                     "endblock";
 
                     // Accept the bid
-                    Auction.acceptBid(Auction.currentProductForSale, bid);
+                    Auction.acceptBid(Auction.currentProductForSale, bid, client.getId());
 
                 } else {
                     this.display = "That bid is lower then the product price.\n"+

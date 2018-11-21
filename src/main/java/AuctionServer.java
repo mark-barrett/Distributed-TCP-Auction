@@ -1,4 +1,6 @@
 import com.sun.corba.se.spi.activation.Server;
+import com.sun.xml.internal.rngom.parse.compact.*;
+import com.sun.xml.internal.rngom.parse.compact.EOFException;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.*;
@@ -32,12 +34,17 @@ public class AuctionServer {
             ObjectInputStream inStream = new ObjectInputStream(new FileInputStream("products.dat"));
 
             // Try assign them to the ArrayList
-            while(inStream.readObject() != null) {
-                products.add((Product) inStream.readObject());
+            while(true) {
+                products = (ArrayList<Product>) inStream.readObject();
             }
 
-
-        } catch(Exception exception) {
+        } catch(EOFException exception) {
+            System.out.println(exception);
+            exception.printStackTrace();
+        } catch(IOException exception) {
+            System.out.println(exception);
+            exception.printStackTrace();
+        } catch(ClassNotFoundException exception) {
             System.out.println(exception);
             exception.printStackTrace();
         }
@@ -89,9 +96,8 @@ public class AuctionServer {
             ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream("products.dat"));
 
             System.out.println("Saving products to local file");
-            for(int i=0; i<AuctionServer.products.size(); i++) {
-                outStream.writeObject(AuctionServer.products.get(i));
-            }
+
+            outStream.writeObject(AuctionServer.products);
 
             System.out.println("Products saved successfully");
 

@@ -41,7 +41,7 @@ public class ClientHandler extends Thread {
 
         // While what is coming from the client is not leave
         do {
-            this.commandHandler.executeCommand(this.clientRequest, this.output, products);
+            this.commandHandler.executeCommand(this.clientRequest, this.output, products, this);
 
             this.clientRequest = input.nextLine();
 
@@ -52,5 +52,13 @@ public class ClientHandler extends Thread {
         output.println("\n[================[New Bid Made]================]");
         output.println("A new bid of "+Float.toString(amount)+" on product "+product.getName()+" has been made.");
         output.println("Auction timer has been reset to 1 minute.\n");
+    }
+
+    public void productSold(Product product, float currentBid) {
+        output.println("[==============[Closing  Auction]==============]");
+        output.println("Closing Auction. Product has been sold!");
+        output.println("Product Sold: "+product.getName());
+        output.println("Sold To: Client "+product.purchasedByThread);
+        output.println("Sold For: "+currentBid);
     }
 }

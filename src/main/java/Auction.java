@@ -42,8 +42,14 @@ public class Auction extends Thread {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                // Get a product off the list
-                currentProductForSale = products.get(0);
+                // Get a product off the list that isn't sold
+                productloop:
+                for(int i=0; i<products.size(); i++) {
+                    if(!products.get(i).isSold()) {
+                        currentProductForSale = products.get(i);
+                        break productloop;
+                    }
+                }
 
                 // Set the start time
                 auctionStartTime = System.currentTimeMillis();
@@ -55,11 +61,19 @@ public class Auction extends Thread {
                 System.out.println("Current Bid: "+currentBid);
                 System.out.println("Auction has started");
 
-                while ((System.nanoTime()-System.nanoTime())< 1*60*NANOSEC_PER_SEC){
-
+                try {
+                    Auction.sleep(60000);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    System.out.println(e);
                 }
 
-                System.out.println("Auction done!");
+                // This timer task cannot exist if the user has bid on the item so if it has got to here with being
+                // cancelled then we know it hasn't been sold.
+                if(Auction.currentProductForSale.purchasedByThread == 0) {
+                    System.out.println("[==============[Closing  Auction]==============]");
+                    System.out.println("Closing Auction. No bids made on this product.");
+                }
             }
         };
 
@@ -71,9 +85,6 @@ public class Auction extends Thread {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                // Get a product off the list
-                currentProductForSale = products.get(0);
-
                 // Set the start time
                 auctionStartTime = System.currentTimeMillis();
 
@@ -83,17 +94,61 @@ public class Auction extends Thread {
                 System.out.println("Price: "+currentProductForSale.getPrice());
                 System.out.println("Current Bid: "+currentBid);
                 System.out.println("Auction has started");
+
+                try {
+                    Auction.sleep(60000);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    System.out.println(e);
+                }
+
+                System.out.println("Auction has finished!");
+
+                // Check if the Auction.currentProductForSale.purchasedBy is not 0. if its not 0 then we
+                // know that someone has bid on it
+                // Send this to all client threads
+                if(Auction.currentProductForSale.purchasedByThread != 0) {
+
+                    // Set the value of the currentProductForSale to sold in the array list.
+                    for(int i=0; i<products.size(); i++) {
+                        if(products.get(i) == Auction.currentProductForSale) {
+                            products.get(i).setSold(true);
+                        }
+                    }
+
+                    // Set the next product in the arraylist
+                    productloop:
+                    for(int i=0; i<products.size(); i++) {
+                        System.out.println("Finding a new product to sell");
+                        System.out.println("Size of array list:"+products.size());
+                        if(!products.get(i).isSold()) {
+                            currentProductForSale = products.get(i);
+                            System.out.println("Found one");
+                            System.out.println(currentProductForSale.toString());
+                            break productloop;
+                        }
+                    }
+
+                    // Get all of the connected clients and then notify them of the bids
+                    for(ClientHandler handler: ClientListener.getClients()) {
+                        // The notify method
+                        handler.productSold(Auction.currentProductForSale, Auction.currentBid);
+                    }
+                }
             }
         };
 
         Auction.getTimer().cancel();
         timer = new Timer();
-        timer.schedule(timerTask, 0, 1000);
+        timer.schedule(timerTask, 0, 60000);
     }
 
-    public static void acceptBid(Product product, float amount) {
+    public static void acceptBid(Product product, float amount, Long clientID) {
         // This would be something like. this.getTimer().cancel. Then start a new one.
         Auction.currentBid = amount;
+
+        // Set the current product for sale as being bid on (bought by) the thread by clientID
+        Auction.currentProductForSale.purchasedByThread = clientID;
 
         // Get all of the connected clients and then notify them of the bids
         for(ClientHandler handler: ClientListener.getClients()) {
