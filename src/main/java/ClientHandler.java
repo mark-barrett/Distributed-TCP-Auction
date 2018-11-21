@@ -46,6 +46,11 @@ public class ClientHandler extends Thread {
             this.clientRequest = input.nextLine();
 
         } while(!this.clientRequest.equals("leave"));
+
+        AuctionServer.numberOfConnections -= 1;
+
+        // Remove this client from the list of clients:
+        ClientListener.getClients().remove(this);
     }
 
     public void notifyBid(Product product, float amount) {

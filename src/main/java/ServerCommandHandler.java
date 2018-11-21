@@ -17,8 +17,9 @@ public class ServerCommandHandler {
     public void executeCommand(String command) {
         if(command.equals("list")) {
             // List all connected clients
-            System.out.println("Connected clients:");
-            System.out.println(ClientListener.getClients());
+            System.out.println("[=============[Connected  Clients]=============]");
+            System.out.println(ClientListener.getClientsAsString());
+            System.out.println("Return to the main menu: main");
 
         } else if(command.equals("add")) {
 

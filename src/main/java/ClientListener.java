@@ -26,6 +26,16 @@ public class ClientListener extends Thread {
         return clients;
     }
 
+    public static String getClientsAsString() {
+        String clientsInString = "";
+
+        for(int i=0; i<clients.size(); i++) {
+            clientsInString += "Client: "+clients.get(i).getId()+"\n";
+        }
+
+        return clientsInString;
+    }
+
     // Overwrite the thread run method.
     public void run() {
 
